@@ -17,7 +17,7 @@ Hooks.on('init', () => {
     function (wrapped) {
       const displayTo = this.document.getFlag(MODULE_ID, 'displayTo');
 
-      if (displayTo) {
+      if (!foundry.utils.isEmpty(displayTo)) {
         return this.isAuthor || displayTo[game.user.id];
       } else {
         return wrapped();
@@ -54,11 +54,16 @@ Hooks.on('init', () => {
   Hooks.on('renderDrawingHUD', (hud, html, options) => {
     renderHUDElement(hud, html);
   });
-});
 
-Hooks.on('ready', () => {
-  // const isResponsibleGM = !game.users
-  //   .filter((user) => user.isGM && (user.active || user.isActive))
-  //   .some((other) => other.id < game.user.id);
-  // if (isResponsibleGM) startTicker();
+  game.socket?.on(`module.${MODULE_ID}`, async (message) => {
+    const args = message.args;
+    console.log('BROADCAST RECEIVED', args);
+    if (message.handlerName === 'drawing' && message.type === 'REFRESH') {
+      if (canvas.scene.id === args.sceneId) {
+        canvas.drawings.placeables
+          .find((p) => p.document.id === args.drawingId)
+          ?.renderFlags.set({ refreshState: true });
+      }
+    }
+  });
 });

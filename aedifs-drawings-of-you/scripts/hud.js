@@ -21,7 +21,7 @@ export async function renderHUDElement(hud, html) {
     })
   );
 
-  hudElement.on('click', '.control-icon', _onUserClick.bind(hud.object.document));
+  hudElement.on('click', '.control-icon', _onUserClick);
 
   html.find('.col.middle').append(hudElement);
 }
@@ -30,13 +30,25 @@ function _onUserClick(event) {
   const userElement = $(event.currentTarget);
   const userId = userElement.data('id');
 
-  const displayTo = this.getFlag(MODULE_ID, 'displayTo') ?? {};
+  canvas.drawings.controlled.forEach((drawing) => {
+    const displayTo = drawing.document.getFlag(MODULE_ID, 'displayTo') ?? {};
 
-  if (displayTo[userId]) {
-    userElement.removeClass('active');
-    this.update({ [`flags.${MODULE_ID}.displayTo.-=${userId}`]: null });
-  } else {
-    userElement.addClass('active');
-    this.update({ [`flags.${MODULE_ID}.displayTo.${userId}`]: true });
-  }
+    if (displayTo[userId]) {
+      userElement.removeClass('active');
+      drawing.document.update({ [`flags.${MODULE_ID}.displayTo.-=${userId}`]: null });
+    } else {
+      userElement.addClass('active');
+      drawing.document.update({ [`flags.${MODULE_ID}.displayTo.${userId}`]: true });
+    }
+
+    const message = {
+      handlerName: 'drawing',
+      args: {
+        sceneId: canvas.scene.id,
+        drawingId: drawing.document.id,
+      },
+      type: 'REFRESH',
+    };
+    game.socket.emit(`module.${MODULE_ID}`, message);
+  });
 }

@@ -24,7 +24,7 @@ export default class UserSelectApp extends Application {
     const displayTo = game.settings.get(MODULE_ID, 'displayTo');
 
     data.users = game.users
-      .filter((u) => u.id !== game.user.id && u.visible)
+      .filter((u) => u.id !== game.user.id)
       .map((u) => {
         return {
           id: u.id,
@@ -62,15 +62,4 @@ export default class UserSelectApp extends Application {
 
     game.settings.set(MODULE_ID, 'displayTo', displayTo);
   }
-
-  //   /**
-  //    * @param {Event} event
-  //    * @param {Object} formData
-  //    */
-  //   async _updateObject(event, formData) {
-  //     if (formData.selectedStyle === 'CUSTOM') {
-  //       game.settings.set(MODULE_ID, 'cssCustom', formData.css);
-  //     }
-  //     game.settings.set(MODULE_ID, 'cssStyle', formData.selectedStyle);
-  //   }
 }
