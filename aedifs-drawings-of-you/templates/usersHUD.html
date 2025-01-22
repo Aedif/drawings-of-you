@@ -1,0 +1,8 @@
+<div class="drawings-of-you-hud">
+    {{#each users}}
+    <div class="control-icon {{#if this.active}}active{{/if}}" data-id="{{this.id}}" data-tooltip="{{this.name}}">
+      <img src="{{this.avatar}}" style="border-color: {{this.color}}" width="36" height="36">
+    </div> 
+    {{/each}}
+
+</div>

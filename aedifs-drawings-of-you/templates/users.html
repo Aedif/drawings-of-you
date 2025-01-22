@@ -1,0 +1,9 @@
+<p class="notes" style="color: white;">If no one is selected your drawings will be visible to everyone.</p>
+<div class="drawings-of-you">
+  {{#each users}}
+  <div class="user {{#if this.active}}active{{/if}}" data-id="{{this.id}}" data-tooltip="{{this.name}}">
+    <img src="{{this.avatar}}" style="border-color: {{this.color}}">
+    <label>{{this.name}}</label>
+  </div> 
+  {{/each}}
+</div>
