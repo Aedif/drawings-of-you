@@ -5,4 +5,24 @@
 
 # Drawings of You
 
-FoundryVTT module for displaying drawings to specific users.
+FoundryVTT module for controlling who can see drawings.
+
+## Drawing Controls
+
+GMs and players alike can select who they want to see their drawings via the following menu accessed by clicking a drawing control button added by the module:
+
+![image](https://github.com/user-attachments/assets/8bcb09d8-d0b7-4f27-a3fc-dfb199ddf9c6)
+
+Any newly painted drawing will only be visible to these users.
+
+GMs have an additional button which will reveal all drawings even if your players did not itend to show them to you.
+
+![image](https://github.com/user-attachments/assets/23e39c91-7bd3-4694-89a8-a6e285879ea5)
+
+## Drawing HUD
+
+Once the drawing has been placed on the canvas, the author or the GM can change who can see it via the HUD.
+
+![image](https://github.com/user-attachments/assets/b18f24b3-09b4-4d74-b037-8bbe85a849af)
+
+Select multiple drawing before clicking on a user to change visibility for many drawings at once.
