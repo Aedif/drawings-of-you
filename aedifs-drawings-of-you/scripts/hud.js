@@ -30,16 +30,13 @@ function _onUserClick(event) {
   const userElement = $(event.currentTarget);
   const userId = userElement.data('id');
 
-  canvas.drawings.controlled.forEach((drawing) => {
-    const displayTo = drawing.document.getFlag(MODULE_ID, 'displayTo') ?? {};
+  const active = userElement.hasClass('active');
+  if (active) userElement.removeClass('active');
+  else userElement.addClass('active');
 
-    if (displayTo[userId]) {
-      userElement.removeClass('active');
-      drawing.document.update({ [`flags.${MODULE_ID}.displayTo.-=${userId}`]: null });
-    } else {
-      userElement.addClass('active');
-      drawing.document.update({ [`flags.${MODULE_ID}.displayTo.${userId}`]: true });
-    }
+  canvas.drawings.controlled.forEach((drawing) => {
+    if (active) drawing.document.update({ [`flags.${MODULE_ID}.displayTo.-=${userId}`]: null });
+    else drawing.document.update({ [`flags.${MODULE_ID}.displayTo.${userId}`]: true });
 
     const message = {
       handlerName: 'drawing',
