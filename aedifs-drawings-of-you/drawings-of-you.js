@@ -55,11 +55,11 @@ Hooks.on('init', () => {
         name: 'drawingsOfYouDisplayTo',
         title: 'Drawings of You',
         icon: 'fa-solid fa-users-rectangle',
-        // visible: true,
-        active: Boolean(Object.values(ui.windows).find((w) => w instanceof UserSelectApp)),
-        toggle: true,
+        button: true,
         onClick: () => {
-          new UserSelectApp().render(true);
+          const app = Object.values(ui.windows).find((w) => w instanceof UserSelectApp);
+          if (app) app.close(true);
+          else new UserSelectApp().render(true);
         },
       },
       {
