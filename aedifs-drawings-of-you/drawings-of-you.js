@@ -11,6 +11,16 @@ Hooks.on('init', () => {
     default: {},
   });
 
+  game.settings.register(MODULE_ID, 'gmSeesAll', {
+    scope: 'global',
+    config: false,
+    type: Boolean,
+    default: false,
+    onChange: () => {
+      canvas.drawings.placeables.forEach((p) => p.renderFlags.set({ refreshState: true }));
+    },
+  });
+
   libWrapper.register(
     MODULE_ID,
     'Drawing.prototype.isVisible',
@@ -18,7 +28,9 @@ Hooks.on('init', () => {
       const displayTo = this.document.getFlag(MODULE_ID, 'displayTo');
 
       if (!foundry.utils.isEmpty(displayTo)) {
-        return this.isAuthor || displayTo[game.user.id];
+        return (
+          this.isAuthor || displayTo[game.user.id] || (game.user.isGM && game.settings.get(MODULE_ID, 'gmSeesAll'))
+        );
       } else {
         return wrapped();
       }
@@ -38,17 +50,30 @@ Hooks.on('init', () => {
   Hooks.on('getSceneControlButtons', (controls) => {
     const drawingsControls = controls.find((c) => c.name === 'drawings');
 
-    drawingsControls.tools.push({
-      name: 'drawingsOfYouDisplayTo',
-      title: 'Drawings of You',
-      icon: 'fa-solid fa-users-rectangle',
-      // visible: true,
-      active: Boolean(Object.values(ui.windows).find((w) => w instanceof UserSelectApp)),
-      toggle: true,
-      onClick: () => {
-        new UserSelectApp().render(true);
+    drawingsControls.tools.push(
+      {
+        name: 'drawingsOfYouDisplayTo',
+        title: 'Drawings of You',
+        icon: 'fa-solid fa-users-rectangle',
+        // visible: true,
+        active: Boolean(Object.values(ui.windows).find((w) => w instanceof UserSelectApp)),
+        toggle: true,
+        onClick: () => {
+          new UserSelectApp().render(true);
+        },
       },
-    });
+      {
+        name: 'drawingsOfYouSeeAll',
+        title: 'Drawings of You: GM Sees All',
+        icon: 'fa-solid fa-eye',
+        visible: game.user.isGM,
+        active: game.settings.get(MODULE_ID, 'gmSeesAll'),
+        toggle: true,
+        onClick: () => {
+          game.settings.set(MODULE_ID, 'gmSeesAll', !game.settings.get(MODULE_ID, 'gmSeesAll'));
+        },
+      }
+    );
   });
 
   Hooks.on('renderDrawingHUD', (hud, html, options) => {
