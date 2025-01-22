@@ -82,7 +82,6 @@ Hooks.on('init', () => {
 
   game.socket?.on(`module.${MODULE_ID}`, async (message) => {
     const args = message.args;
-    console.log('BROADCAST RECEIVED', args);
     if (message.handlerName === 'drawing' && message.type === 'REFRESH') {
       if (canvas.scene.id === args.sceneId) {
         canvas.drawings.placeables
